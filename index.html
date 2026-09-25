@@ -3,40 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sesli Kütüphane (LibriVox) - Standalone</title>
+  <title>Sesli Kütüphane & Dünya Klasikleri Çaları</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23fa520f' stroke='%2344403c' stroke-width='1.5'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='-apple-system,BlinkMacSystemFont,Inter,sans-serif' font-weight='800' font-size='13' letter-spacing='-0.5'%3EMK%3C/text%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="css/mistral-theme.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c1917' stroke='%2344403c' stroke-width='1.5'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='-apple-system,BlinkMacSystemFont,Inter,sans-serif' font-weight='800' font-size='13' letter-spacing='-0.5'%3EMK%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="css/style.css">
-  
+  <link rel="stylesheet" href="css/mistral-theme.css">
+  <link rel="stylesheet" href="css/app.css">
   <style>
-    :root { --mistral-ink: #1c1917; --mistral-slate: #78716c; --mistral-stone: #a8a29e; --mistral-hairline: #e7e5e4; --mistral-cream: #f5f5f4; --mistral-beige-deep: #d6d3d1; }
-    body { font-family: 'Inter', sans-serif; background-color: #fafaf9; color: var(--mistral-ink); }
-    h1, h2, .font-editorial { font-family: 'Newsreader', serif; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    :root {
+      --mistral-ink: #1c1917;
+      --mistral-slate: #78716c;
+      --mistral-stone: #a8a29e;
+      --mistral-hairline: #e7e5e4;
+      --mistral-cream: #f5f5f4;
+      --mistral-cream-deeper: #e7e5e4;
+      --mistral-cream-light: #fafaf9;
+      --mistral-beige-deep: #d6d3d1;
+      --mistral-orange: #fa520f;
+      --mistral-orange-deep: #e04400;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #fafaf9;
+      color: var(--mistral-ink);
+    }
+    h1, h2, h3, .font-editorial {
+      font-family: 'Newsreader', serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .bg-mistral-cream { background-color: var(--mistral-cream); }
+    .bg-mistral-cream-light { background-color: var(--mistral-cream-light); }
+    .bg-mistral-cream-deeper { background-color: var(--mistral-cream-deeper); }
     .text-mistral-ink { color: var(--mistral-ink); }
     .text-mistral-slate { color: var(--mistral-slate); }
     .text-mistral-stone { color: var(--mistral-stone); }
-    .bg-mistral-cream { background-color: var(--mistral-cream); }
+    .text-mistral-orange { color: var(--mistral-orange); }
     .border-mistral-hairline { border-color: var(--mistral-hairline); }
-    .bg-mistral-canvas { background-color: #0f172a; }
+    .border-mistral-beige-deep { border-color: var(--mistral-beige-deep); }
+    .border-mistral-orange { border-color: var(--mistral-orange); }
   </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 sm:p-8">
   <div class="max-w-6xl mx-auto">
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-3">
-          <a href="https://github.com/melihkarasu" target="_blank" class="text-mistral-slate hover:text-teal-500 transition text-sm flex items-center gap-1">&larr; GitHub Profiline Dön</a>
-          <span class="text-mistral-stone">|</span>
-          <span class="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-600 text-xs font-semibold">Open Source Edition</span>
+    <!-- Üst Başlık & Navigasyon -->
+      <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <a href="/" class="text-mistral-slate hover:text-mistral-orange transition text-sm flex items-center gap-1 font-medium">
+              &larr; Vitrine Dön
+            </a>
+            <span class="text-mistral-hairline">|</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-mistral-cream text-mistral-ink border border-mistral-beige-deep text-xs font-semibold">Sanat, Tarih & Edebiyat</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-normal font-editorial tracking-tight mt-1.5 text-mistral-ink flex items-center gap-2">
+            <span>🎧</span> Sesli Kütüphane & Dünya Klasikleri Çaları
+          </h1>
+          <p class="text-mistral-slate text-sm mt-0.5 font-normal">
+            LibriVox açık kamu malı arşivi ile dünya edebiyatı klasiklerinin seslendirilmiş kayıtları, bölüm listeleri ve ses çaları.
+          </p>
         </div>
-        <h1 class="text-3xl sm:text-4xl font-normal font-editorial tracking-tight mt-1.5 text-mistral-ink flex items-center gap-2"><span>🎧</span> Sesli Kütüphane (LibriVox)</h1>
+
+        <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-mistral-hairline text-xs text-mistral-ink shadow-xs">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="font-medium" id="audio-books-count">Ses Arşivi Açık</span>
+        </div>
       </div>
-    </div>
-    
+
+      <!-- ÇALAN SESLİ KİTAP KARTI (STICKY AUDIO DOCK) -->
+      <div id="audiobook-dock" class="p-6 rounded-2xl bg-white border border-mistral-orange/40 shadow-md mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 transition">
+        <div class="flex items-center gap-4 w-full sm:w-auto">
+          <div class="w-14 h-14 rounded-xl bg-mistral-cream border border-mistral-beige-deep flex items-center justify-center text-2xl shrink-0">
+            📖
+          </div>
+          <div class="min-w-0">
+            <span class="text-[10px] font-bold text-mistral-orange uppercase tracking-wider block" id="dock-status">SESLİ KİTAP SEÇİN</span>
+            <h3 class="text-lg font-bold font-editorial text-mistral-ink truncate" id="dock-title">Dinlemek İstediğiniz Eseri Seçin</h3>
+            <p class="text-xs text-mistral-slate truncate" id="dock-author">Kamu malı dünya klasikleri</p>
+          </div>
+        </div>
+
+        <!-- Oynatıcı Kontrolleri -->
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <button 
+            type="button" 
+            onclick="toggleAudioPlay()" 
+            id="btn-dock-play" 
+            class="px-5 py-2.5 rounded-md bg-mistral-orange hover:bg-mistral-orange-deep text-white font-medium text-xs transition shadow-xs flex items-center gap-2 cursor-pointer">
+            <span id="dock-play-icon">▶</span>
+            <span id="dock-play-text">Oynat</span>
+          </button>
+          
+          <a id="btn-dock-external" href="#" target="_blank" rel="noopener" class="hidden px-4 py-2.5 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep text-xs font-semibold transition items-center gap-1.5">
+            <span>📥</span> LibriVox Sayfası &rarr;
+          </a>
+        </div>
+
+        <audio id="audiobook-player" class="hidden"></audio>
+      </div>
+
+      <!-- ARAMA VE FİLTRE PANELİ -->
+      <div class="p-6 rounded-2xl bg-white border border-mistral-hairline shadow-sm mb-8 space-y-4">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <input 
+              type="text" 
+              id="search-book" 
+              placeholder="Eser veya yazar adı arayın (örn: Monte Cristo, Sherlock Holmes, Dracula, Pride)..." 
+              onkeydown="if(event.key==='Enter') loadAudiobooks()"
+              class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white border border-mistral-hairline text-sm text-mistral-ink placeholder:text-mistral-stone focus:outline-none focus:border-mistral-orange transition">
+            <span class="absolute left-3.5 top-3 text-mistral-stone text-sm">🔍</span>
+          </div>
+          <button 
+            type="button" 
+            onclick="loadAudiobooks()" 
+            class="px-5 py-2.5 rounded-md bg-mistral-orange hover:bg-mistral-orange-deep text-white text-xs font-medium transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>Sesli Kitap Bul</span> &rarr;
+          </button>
+        </div>
+
+        <!-- Hızlı Eserler -->
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-mistral-hairline text-xs">
+          <span class="text-mistral-stone font-medium mr-1">Örnek Başyapıtlar:</span>
+          <button onclick="quickSearch('Sherlock Holmes')" class="px-2.5 py-1 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep transition">🕵️‍♂️ Sherlock Holmes</button>
+          <button onclick="quickSearch('Dracula')" class="px-2.5 py-1 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep transition">🧛 Dracula</button>
+          <button onclick="quickSearch('Monte Cristo')" class="px-2.5 py-1 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep transition">⚔️ Monte Cristo</button>
+          <button onclick="quickSearch('Frankenstein')" class="px-2.5 py-1 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep transition">⚡ Frankenstein</button>
+          <button onclick="quickSearch('Alice in Wonderland')" class="px-2.5 py-1 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep transition">🐇 Alice in Wonderland</button>
+        </div>
+      </div>
+
+      <!-- KİTAP KARTLARI IZGARASI -->
+      <div id="books-loading" class="py-16 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-mistral-cream text-mistral-ink border border-mistral-beige-deep text-xs font-semibold">
+          <span class="w-2.5 h-2.5 rounded-full bg-mistral-orange animate-ping"></span>
+          <span>LibriVox sesli kitap arşivi taranıyor...</span>
+        </div>
+      </div>
+
+      <div id="books-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <!-- JS ile çizilir -->
+      </div>
   </div>
+
+  <footer class="mt-16 text-center text-xs text-mistral-stone border-t border-mistral-hairline pt-6">
+    <p>Açık Kaynak Standalone Sürüm • Veriler: <a href="https://librivox.org/api" target="_blank" rel="noopener" class="underline hover:text-mistral-ink">LibriVox API</a> • <a href="https://github.com/public-apis/public-apis" target="_blank" rel="noopener" class="underline hover:text-mistral-ink">Public APIs</a></p>
+  </footer>
+
+  <script src="js/app.js"></script>
 </body>
 </html>

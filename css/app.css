@@ -1,0 +1,23 @@
+/* Minimal CSS for audiobook dock */
+#audiobook-dock {
+    transition: all 0.3s ease;
+}
+
+#audiobook-player {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+#books-loading {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.book-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}

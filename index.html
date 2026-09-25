@@ -97,6 +97,53 @@
         <audio id="audiobook-player" class="hidden"></audio>
       </div>
 
+      <!-- TAM OYNATICI PANELİ (FULL PLAYER PANEL - Uygulama İçi Yönetim) -->
+      <div id="player-panel" class="hidden p-6 rounded-2xl bg-white border border-mistral-hairline shadow-md mb-8 space-y-4">
+        <!-- İlerleme Çubuğu (Seekable) -->
+        <div class="space-y-1.5">
+          <input type="range" id="seek-bar" min="0" max="1000" value="0" step="1" class="w-full accent-orange-600 cursor-pointer" oninput="seekTo(this.value)">
+          <div class="flex items-center justify-between text-[11px] text-mistral-slate font-mono">
+            <span id="time-current">0:00</span>
+            <span id="track-progress-label" class="font-bold text-mistral-ink"></span>
+            <span id="time-total">0:00</span>
+          </div>
+        </div>
+
+        <!-- Kontrol Butonları -->
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <button onclick="prevTrack()" id="btn-prev-track" class="px-3 py-2 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-ink font-bold text-sm transition cursor-pointer" title="Önceki Bölüm">⏮</button>
+          <button onclick="skipBackward()" class="px-3 py-2 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-ink font-bold text-xs transition cursor-pointer" title="10 saniye geri">⏪ 10s</button>
+          <button onclick="toggleAudioPlay()" id="btn-panel-play" class="px-6 py-2.5 rounded-lg bg-mistral-orange hover:bg-mistral-orange-deep text-white font-bold text-sm transition shadow cursor-pointer">▶</button>
+          <button onclick="skipForward()" class="px-3 py-2 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-ink font-bold text-xs transition cursor-pointer" title="10 saniye ileri">10s ⏩</button>
+          <button onclick="nextTrack()" id="btn-next-track" class="px-3 py-2 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-ink font-bold text-sm transition cursor-pointer" title="Sonraki Bölüm">⏭</button>
+        </div>
+
+        <!-- Hız ve Ses Kontrolleri -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs pt-2 border-t border-mistral-hairline">
+          <div class="flex items-center gap-2">
+            <span class="text-mistral-slate font-medium">Hız:</span>
+            <select id="playback-rate" onchange="setPlaybackRate(this.value)" class="px-2 py-1 rounded-lg bg-white border border-mistral-hairline text-mistral-ink font-bold focus:outline-none cursor-pointer">
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2 flex-1 max-w-[240px]">
+            <button onclick="toggleMute()" id="btn-mute" class="text-mistral-ink hover:text-mistral-orange transition text-base cursor-pointer" title="Sessize Al">🔊</button>
+            <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="1" class="flex-1 accent-orange-600 cursor-pointer" oninput="setVolume(this.value)">
+          </div>
+          <span class="text-[10px] text-mistral-stone hidden sm:inline">💡 Kaldığınız yer otomatik kaydedilir</span>
+        </div>
+
+        <!-- Bölüm Listesi -->
+        <div class="space-y-2 pt-2">
+          <h4 class="text-sm font-bold font-editorial text-mistral-ink">Bölümler (<span id="track-count">0</span>)</h4>
+          <div id="track-list" class="space-y-1.5 max-h-[300px] overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+
       <!-- ARAMA VE FİLTRE PANELİ -->
       <div class="p-6 rounded-2xl bg-white border border-mistral-hairline shadow-sm mb-8 space-y-4">
         <div class="flex flex-col sm:flex-row gap-3">

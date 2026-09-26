@@ -144,7 +144,7 @@ function renderBooks(list) {
     return;
   }
 
-  grid.innerHTML = list.map(b => `
+  grid.innerHTML = list.map((b, idx) => `
     <div class="p-6 rounded-xl bg-white border border-mistral-hairline hover:border-mistral-orange/40 hover:shadow-md transition duration-200 flex flex-col justify-between group">
       <div>
         <div class="flex items-center justify-between mb-3">
@@ -164,7 +164,7 @@ function renderBooks(list) {
 
       <div class="pt-3 border-t border-mistral-hairline flex items-center justify-between gap-2">
         <button 
-          onclick='selectAndPlayBook(${JSON.stringify(b).replace(/'/g, "'")})'
+          onclick="selectAndPlayBookByIdx(${idx})"
           class="flex-1 py-2 px-3 rounded-md bg-mistral-orange hover:bg-mistral-orange-deep text-white text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer">
           <span>▶</span> Dinle & İncele
         </button>
@@ -174,6 +174,11 @@ function renderBooks(list) {
       </div>
     </div>
   `).join('');
+}
+
+function selectAndPlayBookByIdx(idx) {
+  const b = currentBooks[idx];
+  if (b) selectAndPlayBook(b);
 }
 
 // Metadata endpoint'ten MP3 bölüm listesini çek ve ilk bölümü çalmaya başla
@@ -291,7 +296,9 @@ function toggleAudioPlay() {
   if (player.paused) {
     player.play().catch(err => {
       console.error('play error:', err);
-      window.open(activeBook.detailsUrl, '_blank');
+      document.getElementById('dock-status').innerText = 'OYNATMA HAZIR';
+      const panelPlay = document.getElementById('btn-panel-play');
+      if (panelPlay) panelPlay.innerText = '▶';
     });
   } else {
     player.pause();
@@ -506,3 +513,4 @@ window.setPlaybackRate = setPlaybackRate;
 window.setVolume = setVolume;
 window.toggleMute = toggleMute;
 window.playTrack = playTrack;
+window.selectAndPlayBookByIdx = selectAndPlayBookByIdx;

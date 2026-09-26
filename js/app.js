@@ -162,15 +162,12 @@ function renderBooks(list) {
         </p>
       </div>
 
-      <div class="pt-3 border-t border-mistral-hairline flex items-center justify-between gap-2">
+      <div class="pt-3 border-t border-mistral-hairline flex items-center justify-center gap-2">
         <button 
           onclick="selectAndPlayBookByIdx(${idx})"
-          class="flex-1 py-2 px-3 rounded-md bg-mistral-orange hover:bg-mistral-orange-deep text-white text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer">
-          <span>▶</span> Dinle & İncele
+          class="w-full py-2.5 px-3 rounded-md bg-mistral-orange hover:bg-mistral-orange-deep text-white text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>▶</span> Dinle
         </button>
-        <a href="${b.detailsUrl}" target="_blank" rel="noopener" title="LibriVox Arşivine Git" class="p-2 rounded-md text-mistral-ink font-boldbg-mistral-cream hover:bg-mistral-cream-deeper text-mistral-ink border border-mistral-beige-deep text-xs">
-          ↗
-        </a>
       </div>
     </div>
   `).join('');
@@ -187,11 +184,6 @@ async function selectAndPlayBook(b) {
   document.getElementById('dock-status').innerText = 'SESLİ KİTAP SEÇİLDİ';
   document.getElementById('dock-title').innerText = b.title;
   document.getElementById('dock-author').innerText = b.authors + (b.downloads ? ' • ⬇️ ' + b.downloads.toLocaleString('tr-TR') : '');
-
-  const extBtn = document.getElementById('btn-dock-external');
-  extBtn.href = b.detailsUrl;
-  extBtn.classList.remove('hidden');
-  extBtn.classList.add('inline-flex');
 
   window.scrollTo({ top: 100, behavior: 'smooth' });
 
@@ -219,7 +211,7 @@ async function selectAndPlayBook(b) {
 
   if (b.tracks.length === 0) {
     document.getElementById('dock-status').innerText = 'SES DOSYASI BULUNAMADI';
-    document.getElementById('dock-author').innerText = b.authors + ' • Arşiv sayfasından dinleyebilirsiniz';
+    document.getElementById('dock-author').innerText = b.authors + ' • Bu eser için ses dosyası bulunamadı';
     return;
   }
 

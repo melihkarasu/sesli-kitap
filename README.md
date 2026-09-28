@@ -9,7 +9,7 @@ LibriVox açık kamu malı arşivi ile dünya edebiyatı klasiklerinin seslendir
 
 ## 🚀 Hızlı Başlangıç
 1. Bu repoyu klonlayın.
-2.  dosyasını tarayıcıda açın.
+2. `index.html` dosyasını tarayıcıda açın.
 
 
 

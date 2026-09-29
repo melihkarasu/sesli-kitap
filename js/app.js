@@ -20,6 +20,7 @@ function saveProgress() {
   if (!activeBook || !activeBook.id) return;
   try {
     const map = getProgressMap();
+    const isNewEntry = !map[activeBook.id];
     map[activeBook.id] = {
       trackIndex: currentTrackIndex,
       positionSec: Math.floor(player.currentTime || 0),
@@ -28,11 +29,99 @@ function saveProgress() {
       updated: Date.now()
     };
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(map));
+    if (isNewEntry) renderMyLibrary();
   } catch(e) {}
 }
 
 function getSavedProgress(bookId) {
   return getProgressMap()[bookId] || null;
+}
+
+// ===== KITAPLIGIM (dinlenen kitapların listesi ve yönetimi) =====
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function getLibraryEntries() {
+  const map = getProgressMap();
+  return Object.entries(map)
+    .filter(([id, p]) => p && (p.title || id))
+    .sort((a, b) => ((b[1] && b[1].updated) || 0) - ((a[1] && a[1].updated) || 0));
+}
+
+function renderMyLibrary() {
+  const section = document.getElementById('my-library-section');
+  const grid = document.getElementById('my-library-grid');
+  const count = document.getElementById('my-library-count');
+  if (!section || !grid || !count) return;
+
+  const entries = getLibraryEntries();
+  if (entries.length === 0) {
+    section.classList.add('hidden');
+    grid.innerHTML = '';
+    return;
+  }
+  section.classList.remove('hidden');
+  count.innerText = String(entries.length);
+
+  grid.innerHTML = entries.map(([id, p], idx) => {
+    const trackNo = (p.trackIndex || 0) + 1;
+    const pos = formatTime(p.positionSec || 0);
+    const when = p.updated ? new Date(p.updated).toLocaleDateString('tr-TR') : '';
+    const isPlaying = activeBook && activeBook.id === id;
+    return `
+    <div class="p-4 rounded-xl bg-white border ${isPlaying ? 'border-mistral-orange/60' : 'border-mistral-hairline hover:border-mistral-orange/40'} hover:shadow-sm transition flex flex-col justify-between gap-3">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-mistral-cream text-mistral-slate border border-mistral-beige-deep shrink-0">🔖 Bölüm ${trackNo}</span>
+          <span class="text-[10px] text-mistral-stone font-mono shrink-0">${escapeHtml(pos)}</span>
+        </div>
+        <h3 class="text-sm font-bold font-editorial text-mistral-ink leading-snug mb-0.5">${escapeHtml(p.title || id)}</h3>
+        <span class="text-xs text-mistral-slate block truncate">✍️ ${escapeHtml(p.authors || 'Bilinmiyor')}</span>
+        ${when ? `<span class="text-[10px] text-mistral-stone block mt-1">Son dinlenme: ${when}</span>` : ''}
+      </div>
+      <div class="pt-2 border-t border-mistral-hairline flex items-center justify-between gap-2">
+        <button onclick="resumeFromLibrary(${idx})" class="px-3 py-1.5 rounded-md bg-mistral-orange hover:bg-mistral-orange-deep text-white text-xs font-semibold transition">▶ Devam Et</button>
+        <button onclick="removeFromLibrary(${idx})" class="text-xs text-rose-500 hover:text-rose-600 hover:underline transition">Kaldır</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function resumeFromLibrary(idx) {
+  const entry = getLibraryEntries()[idx];
+  if (!entry) return;
+  const [id, saved] = entry;
+  let b = currentBooks.find(x => x.id === id);
+  if (!b) {
+    b = {
+      id,
+      title: saved.title || 'Başlıksız Eser',
+      authors: saved.authors || 'Bilinmiyor',
+      description: '',
+      downloads: 0,
+      language: 'English',
+      detailsUrl: 'https://archive.org/details/' + id,
+      tracks: null
+    };
+    currentBooks.unshift(b);
+  }
+  await selectAndPlayBook(b, true);
+}
+
+function removeFromLibrary(idx) {
+  const entry = getLibraryEntries()[idx];
+  if (!entry) return;
+  const [id, p] = entry;
+  if (!confirm('"' + (p.title || id) + '" kitaplığından kaldırılsın mı?')) return;
+  const map = getProgressMap();
+  delete map[id];
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(map));
+  renderMyLibrary();
 }
 
 function formatTime(sec) {
@@ -179,7 +268,7 @@ function selectAndPlayBookByIdx(idx) {
 }
 
 // Metadata endpoint'ten MP3 bölüm listesini çek ve ilk bölümü çalmaya başla
-async function selectAndPlayBook(b) {
+async function selectAndPlayBook(b, autoResume) {
   activeBook = b;
   document.getElementById('dock-status').innerText = 'SESLİ KİTAP SEÇİLDİ';
   document.getElementById('dock-title').innerText = b.title;
@@ -223,10 +312,14 @@ async function selectAndPlayBook(b) {
   renderTrackList();
   updateTrackButtons();
 
-  // Kaldığım yerden devam teklifi
+  // Kaldığım yerden devam teklifi (kitaplıktaki "Devam Et"ten gelirse doğrudan devam et)
   const saved = getSavedProgress(b.id);
-  if (saved && saved.trackIndex > 0 || (saved && saved.positionSec > 15)) {
+  if (saved && (saved.trackIndex > 0 || saved.positionSec > 15)) {
     const tIdx = Math.min(saved.trackIndex || 0, b.tracks.length - 1);
+    if (autoResume) {
+      playTrack(tIdx, saved.positionSec);
+      return;
+    }
     const resume = confirm('Bu kitabı daha önce dinlemiştiniz:\n\nBölüm ' + (tIdx + 1) + ', ' + formatTime(saved.positionSec) + ' pozisyonundan devam edilsin mi?\n\n(Tamam = Kaldığım yerden devam / İptal = Baştan başla)');
     if (resume) {
       playTrack(tIdx, saved.positionSec);
@@ -306,6 +399,7 @@ function stopPlayback() {
   document.getElementById('dock-play-text').innerText = 'Oynat';
   const panelPlay = document.getElementById('btn-panel-play');
   if (panelPlay) panelPlay.innerText = '▶';
+  renderMyLibrary();
 }
 
 // ===== TAM OYNATICI KONTROLLERİ (Full Player Controls) =====
@@ -468,6 +562,7 @@ player.addEventListener('pause', () => {
     const panelPlay = document.getElementById('btn-panel-play');
     if (panelPlay) panelPlay.innerText = '▶';
     saveProgress();
+    renderMyLibrary();
   }
 });
 
@@ -481,6 +576,7 @@ player.addEventListener('ended', () => {
     const panelPlay = document.getElementById('btn-panel-play');
     if (panelPlay) panelPlay.innerText = '▶';
     saveProgress();
+    renderMyLibrary();
   }
 });
 
@@ -489,6 +585,7 @@ window.addEventListener('beforeunload', () => saveProgress());
 
 document.addEventListener('DOMContentLoaded', () => {
   loadAudiobooks();
+  renderMyLibrary();
 });
 
 // Window globals for inline onclicks
@@ -506,3 +603,5 @@ window.setVolume = setVolume;
 window.toggleMute = toggleMute;
 window.playTrack = playTrack;
 window.selectAndPlayBookByIdx = selectAndPlayBookByIdx;
+window.resumeFromLibrary = resumeFromLibrary;
+window.removeFromLibrary = removeFromLibrary;
